@@ -1,11 +1,11 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
 
-import products from '../src/products';
+import { getAllProducts } from '../src/controllers/products';
 
-export const getProductsList: APIGatewayProxyHandler = async (event, _context) => {
-  console.log('event: ', event);
+export const getProductsList: APIGatewayProxyHandler = async () => {
   try {
+    const products = await getAllProducts();
     return {
       statusCode: 200,
       body: JSON.stringify(products),
