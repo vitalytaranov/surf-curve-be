@@ -5,6 +5,7 @@ export default [
     price: 1000,
     description: 'surf board description',
     count: 5,
+    img: 'https://assets.boardshop.co.uk/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/c/h/channel-islands-mid-7ft2-fcsii-turquoise-resin-tint_a.jpg',
   },
   {
     id: 2,
@@ -12,6 +13,7 @@ export default [
     price: 1100,
     description: 'winter surf board description',
     count: 3,
+    img: 'https://assets.boardshop.co.uk/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/l/o/lost-son-of-cobra-cobra-killer-surfboard-5ft7-futures-tan_a.jpg',
   },
   {
     id: 3,
@@ -19,6 +21,7 @@ export default [
     price: 999,
     description: 'summer surf board description',
     count: 1,
+    img: 'https://assets.boardshop.co.uk/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/a/l/album-sunstone-5ft2-futures-surfboard-duck-egg-blue-tail-golden-yellow_a.jpg',
   },
   {
     id: 4,
@@ -26,6 +29,7 @@ export default [
     price: 400,
     description: 'fall surf board description',
     count: 2,
+    img: 'https://assets.boardshop.co.uk/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/a/l/album-sunstone-5ft4-surfboard-futures-off-white-tail-khaki-green_a.jpg',
   },
   {
     id: 5,
@@ -33,6 +37,7 @@ export default [
     price: 1000,
     description: 'surf board description',
     count: 2,
+    img: 'https://assets.boardshop.co.uk/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/c/j/cj-nelson-thuderbolt-outlier-surfboard-9ft0-xeon-red_a.jpg',
   },
   {
     id: 6,
@@ -40,5 +45,6 @@ export default [
     price: 300,
     description: 'surf board description',
     count: 2,
+    img: 'https://assets.boardshop.co.uk/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/l/i/lib-tech-lost-pickup-stik-7ft6-tail-dup-blue-surfboard-fcsii_a.jpg',
   },
 ];
