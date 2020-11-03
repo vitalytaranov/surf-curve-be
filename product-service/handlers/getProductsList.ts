@@ -1,18 +1,21 @@
+import axios from 'axios';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
 
-import { getAllProducts } from '../src/controllers/products';
+import { DATABASE_ENDPOINT } from '../utils'
+
 
 export const getProductsList: APIGatewayProxyHandler = async () => {
   try {
-    const products = await getAllProducts();
+    const response = await axios.get(`${ DATABASE_ENDPOINT }/products`);
+
     return {
       statusCode: 200,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': true,
       },
-      body: JSON.stringify(products),
+      body: JSON.stringify(response.data),
     };
   } catch (error) {
     return {

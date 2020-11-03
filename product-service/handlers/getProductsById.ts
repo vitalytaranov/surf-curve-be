@@ -1,12 +1,19 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
 
-import { getProductById } from '../src/controllers/products';
+import axios from "axios";
+import { DATABASE_ENDPOINT } from "../utils";
 
 export const getProductsById: APIGatewayProxyHandler = async (event, _context) => {
   try {
     const { productId } = event.pathParameters;
-    const product = await getProductById(productId);
+    const response = await axios.get(`${ DATABASE_ENDPOINT }/products`);
+    const { data: products } = response;
+    let product;
+
+    if (products && products.length) {
+      product = products.find(product => product.id === Number(productId));
+    }
 
     return {
       statusCode: 200,
