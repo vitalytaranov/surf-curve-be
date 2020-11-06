@@ -1,0 +1,1 @@
+export const DATABASE_ENDPOINT = 'https://a9fvket2p3.execute-api.eu-west-1.amazonaws.com/dev';
