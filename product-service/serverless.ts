@@ -3,9 +3,6 @@ import type { Serverless } from 'serverless/aws';
 const serverlessConfiguration: Serverless = {
   service: {
     name: 'product-service',
-    // app and org for use with dashboard.serverless.com
-    // app: your-app-name,
-    // org: your-org-name,
   },
   frameworkVersion: '2',
   custom: {
@@ -14,8 +11,7 @@ const serverlessConfiguration: Serverless = {
       includeModules: true
     }
   },
-  // Add the serverless-webpack plugin
-  plugins: ['serverless-webpack'],
+  plugins: ['serverless-webpack', 'serverless-dotenv-plugin'],
   provider: {
     name: 'aws',
     runtime: 'nodejs12.x',
@@ -26,6 +22,8 @@ const serverlessConfiguration: Serverless = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      // create ".env" file to pass env variables to connect to DB
+      // PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD
     },
   },
   functions: {
@@ -52,7 +50,31 @@ const serverlessConfiguration: Serverless = {
           }
         }
       ]
-    }
+    },
+    createProduct: {
+      handler: 'handler.createProduct',
+      events: [
+        {
+          http: {
+            method: 'post',
+            path: 'products',
+            cors: true,
+          }
+        }
+      ]
+    },
+    deleteProduct: {
+      handler: 'handler.deleteProduct',
+      events: [
+        {
+          http: {
+            method: 'delete',
+            path: 'products/{productId}',
+            cors: true,
+          }
+        }
+      ]
+    },
   }
 }
 
