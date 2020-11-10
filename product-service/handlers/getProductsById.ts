@@ -44,7 +44,7 @@ export const getProductsById: APIGatewayProxyHandler = async (event, _context) =
     await client.query(PGTransaction.rollback);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: error }),
+      body: JSON.stringify({ message: 'Server error' }),
     };
   } finally {
     await client.end();

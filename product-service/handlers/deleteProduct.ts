@@ -52,7 +52,7 @@ export const deleteProduct: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ message: error }),
+      body: JSON.stringify({ message: 'Server error' }),
     };
   } finally {
     await client.end();
