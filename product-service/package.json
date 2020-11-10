@@ -12,6 +12,7 @@
     "lodash": "^4.17.20",
     "pg": "^8.4.2",
     "source-map-support": "^0.5.10",
+    "validator": "^13.1.17",
     "yup": "^0.29.3"
   },
   "devDependencies": {
@@ -19,6 +20,7 @@
     "@types/lodash": "^4.14.165",
     "@types/node": "^10.12.18",
     "@types/serverless": "^1.72.5",
+    "@types/validator": "^13.1.0",
     "@types/yup": "^0.29.9",
     "fork-ts-checker-webpack-plugin": "^3.0.1",
     "serverless-dotenv-plugin": "^3.1.0",

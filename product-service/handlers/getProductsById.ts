@@ -1,13 +1,26 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
 import { Client } from 'pg';
+import validator from 'validator';
 
 import { dbOptions } from '../db-options';
 import { PGTransaction } from '../utils';
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true,
+};
 
 export const getProductsById: APIGatewayProxyHandler = async (event, _context) => {
   console.log('pathParameters @getProductsById: ', event.pathParameters);
+
+  if (event.pathParameters && !validator.isUUID(event.pathParameters.productId)) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ message: 'Invalid request, please provide a valid uuid' }),
+    };
+  }
 
   const client = new Client(dbOptions);
   await client.connect();
@@ -24,10 +37,7 @@ export const getProductsById: APIGatewayProxyHandler = async (event, _context) =
     await client.query(PGTransaction.commit);
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
-      },
+      headers,
       body: JSON.stringify(product),
     };
   } catch (error) {
