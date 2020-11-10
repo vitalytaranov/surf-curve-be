@@ -26,13 +26,17 @@ function isValidCount(count: number): boolean {
   return Number.isInteger(count) && count >= 0;
 }
 
+function isValidPrice(count: number): boolean {
+  return count >= 0;
+}
+
 export const createProduct: APIGatewayProxyHandler = async (event) => {
   const payload: NewProduct = JSON.parse(event.body);
   console.log('payload @createProduct: ', payload);
 
   const isValidPayload: boolean = await newProductSchema.isValid(payload);
 
-  if (!isValidPayload || (!isUndefined(payload.count) && !isValidCount(payload.count))) {
+  if (!isValidPayload || (!isUndefined(payload.count) && !isValidCount(payload.count)) || !isValidPrice(payload.price)) {
     return {
       statusCode: 400,
       headers,
