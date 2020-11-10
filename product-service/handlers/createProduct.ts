@@ -2,6 +2,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
 import { Client } from 'pg';
 import * as Yup from 'yup';
+import { isUndefined } from 'lodash';
 
 import { dbOptions } from '../db-options';
 import { PGTransaction } from '../utils';
@@ -27,7 +28,7 @@ export const createProduct: APIGatewayProxyHandler = async (event) => {
 
   const isValidPayload: boolean = await newProductSchema.isValid(payload);
 
-  if (!isValidPayload) {
+  if (!isValidPayload || (!isUndefined(payload.count) && payload.count < 0)) {
     return {
       statusCode: 400,
       headers,
