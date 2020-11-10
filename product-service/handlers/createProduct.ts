@@ -22,13 +22,17 @@ const headers = {
   'Access-Control-Allow-Credentials': true,
 };
 
+function isValidCount(count: number): boolean {
+  return Number.isInteger(count) && count >= 0;
+}
+
 export const createProduct: APIGatewayProxyHandler = async (event) => {
   const payload: NewProduct = JSON.parse(event.body);
   console.log('payload @createProduct: ', payload);
 
   const isValidPayload: boolean = await newProductSchema.isValid(payload);
 
-  if (!isValidPayload || (!isUndefined(payload.count) && payload.count < 0)) {
+  if (!isValidPayload || (!isUndefined(payload.count) && !isValidCount(payload.count))) {
     return {
       statusCode: 400,
       headers,
