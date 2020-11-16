@@ -17,7 +17,7 @@ export const importFile: APIGatewayProxyHandler = async (event, _context) => {
     const params = {
       Bucket: BUCKET,
       Key: `uploaded/${ name }`,
-      ContentType: "text/csv",
+      ContentType: 'text/csv',
       Expires: 60,
     };
 
