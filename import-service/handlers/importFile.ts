@@ -24,7 +24,7 @@ export const importFile: APIGatewayProxyHandler = async (event, _context) => {
     const url = await s3.getSignedUrlPromise('putObject', params);
 
     return response(200, {
-      body: { url },
+      body: url,
     });
   } catch (error) {
     return response(500, {
