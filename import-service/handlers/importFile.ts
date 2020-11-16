@@ -6,7 +6,7 @@ import { S3_REGION } from '../utils';
 import { response } from '../../utils';
 
 
-const { BUCKET } = process.env
+const { BUCKET = 'surf-curve-storage' } = process.env
 
 export const importFile: APIGatewayProxyHandler = async (event, _context) => {
   console.log('queryStringParameters @importFile: ', event.queryStringParameters);
