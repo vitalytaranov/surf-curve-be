@@ -9,7 +9,7 @@ import { S3_REGION } from '../utils';
 const { BUCKET } = process.env
 
 
-export const importFileParser: APIGatewayProxyHandler = async (event, _context) => {
+export const importFileParser: APIGatewayProxyHandler = (event, _context) => {
   console.log('event @importFileParser: ', event);
 
   try {
@@ -26,7 +26,9 @@ export const importFileParser: APIGatewayProxyHandler = async (event, _context) 
       s3ReadStream
         .pipe(csv())
         .on('data', (chunk) => { console.log('parsed chunk: ', chunk) })
-        .on('end', async () => {
+        .on('end', async (data) => {
+          console.log('parsed csv: ', data);
+
           const copyFrom = `${ BUCKET }/${ record.s3.object.key }`;
           const copyTo = record.s3.object.key.replace('uploaded', 'parsed');
 
