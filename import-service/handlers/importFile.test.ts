@@ -21,13 +21,13 @@ describe('Import File', () => {
     const event = ({ queryStringParameters: { name: fileName } });
     const result = await importFile(event, undefined, undefined);
 
-    expect(mockGetSignedUrlPromise).toHaveBeenCalledTimes(1);
     expect(mockGetSignedUrlPromise).toHaveBeenCalledWith('putObject', {
       Bucket: 'surf-curve-storage',
       Key: `uploaded/${ fileName }`,
       Expires: 60,
       ContentType: 'text/csv',
     });
+    expect(mockGetSignedUrlPromise).toHaveBeenCalledTimes(1);
     expect(result).toMatchObject({
       statusCode: 200,
       headers,
@@ -46,13 +46,13 @@ describe('Import File', () => {
     const event = ({ queryStringParameters: { name: fileName } });
     const result = await importFile(event, undefined, undefined);
 
-    expect(mockGetSignedUrlPromise).toHaveBeenCalledTimes(1);
     expect(mockGetSignedUrlPromise).toHaveBeenCalledWith('putObject', {
       Bucket: 'surf-curve-storage',
       Key: `uploaded/${ fileName }`,
       Expires: 60,
       ContentType: 'text/csv',
     });
+    expect(mockGetSignedUrlPromise).toHaveBeenCalledTimes(1);
     expect(result).toMatchObject({
       statusCode: 500,
       headers,
