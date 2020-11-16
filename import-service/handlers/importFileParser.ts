@@ -26,9 +26,7 @@ export const importFileParser: APIGatewayProxyHandler = (event, _context) => {
       s3ReadStream
         .pipe(csv())
         .on('data', (chunk) => { console.log('parsed chunk: ', chunk) })
-        .on('end', async (data) => {
-          console.log('parsed csv: ', data);
-
+        .on('end', async () => {
           const copyFrom = `${ BUCKET }/${ record.s3.object.key }`;
           const copyTo = record.s3.object.key.replace('uploaded', 'parsed');
 
