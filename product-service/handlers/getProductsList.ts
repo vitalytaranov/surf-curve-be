@@ -3,7 +3,7 @@ import 'source-map-support/register';
 import { Client } from 'pg';
 
 import { dbOptions } from '../db-options';
-import { PGTransaction } from '../utils';
+import { PGTransaction } from '../../utils';
 
 
 export const getProductsList: APIGatewayProxyHandler = async (event) => {

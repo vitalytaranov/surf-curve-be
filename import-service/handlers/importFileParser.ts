@@ -3,6 +3,8 @@ import 'source-map-support/register';
 import { S3 } from 'aws-sdk';
 import * as csv from 'csv-parser';
 
+import { S3_REGION } from '../utils';
+
 
 const { BUCKET } = process.env
 
@@ -11,7 +13,7 @@ export const importFileParser: APIGatewayProxyHandler = async (event, _context) 
   console.log('event @importFileParser: ', event);
 
   try {
-    const s3 = new S3({ region: 'eu-west-1' });
+    const s3 = new S3({ region: S3_REGION });
     console.log('event.Records: ', event.Records);
 
     event.Records.forEach((record) => {

@@ -2,20 +2,18 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
 import { S3 } from 'aws-sdk';
 
+import { S3_REGION } from '../utils';
+import { response } from '../../utils';
+
 
 const { BUCKET } = process.env
-
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Credentials': true,
-};
 
 export const importFile: APIGatewayProxyHandler = async (event, _context) => {
   console.log('queryStringParameters @importFile: ', event.queryStringParameters);
 
   try {
     const { name } = event.queryStringParameters;
-    const s3 = new S3({ region: 'eu-west-1' });
+    const s3 = new S3({ region: S3_REGION });
     const params = {
       Bucket: BUCKET,
       Key: `uploaded/${ name }`,
@@ -25,15 +23,12 @@ export const importFile: APIGatewayProxyHandler = async (event, _context) => {
 
     const url = await s3.getSignedUrlPromise('putObject', params);
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ url }),
-    };
+    return response(200, {
+      body: { url },
+    });
   } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Server error' }),
-    };
+    return response(500, {
+      body: { message: 'Server error' },
+    });
   }
 }

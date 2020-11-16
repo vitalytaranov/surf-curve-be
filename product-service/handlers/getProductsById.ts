@@ -4,7 +4,7 @@ import { Client } from 'pg';
 import validator from 'validator';
 
 import { dbOptions } from '../db-options';
-import { PGTransaction } from '../utils';
+import { PGTransaction } from '../../utils';
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
