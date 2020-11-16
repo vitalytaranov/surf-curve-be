@@ -11,38 +11,29 @@ const headers = {
 };
 
 export const importFile: APIGatewayProxyHandler = async (event, _context) => {
-  console.log('pathParameters @getProductsById: ', event.pathParameters);
+  console.log('queryStringParameters @importFile: ', event.queryStringParameters);
 
   try {
-    const { fileName } = event.pathParameters;
-    const s3 = new S3({ region: 'eu-west-1', signatureVersion: 'v4' });
+    const { name } = event.queryStringParameters;
+    const s3 = new S3({ region: 'eu-west-1' });
     const params = {
       Bucket: BUCKET,
-      Key: `uploaded/${ fileName }`,
+      Key: `uploaded/${ name }`,
       ContentType: "text/csv",
       Expires: 60,
     };
-    console.log('params: ', params);
 
-    const response = await s3.getSignedUrl('putObject', params);
-    console.log('response: ', response);
-    // const files = s3Response.Contents;
-    // const body = files
-    //   .filter(file => file.Size)
-    //   .map(file => `https://${ BUCKET }.s3.amazonaws.com/${ file.Key }`);
-    // console.log('BODY: ', body);
+    const url = await s3.getSignedUrlPromise('putObject', params);
 
     return {
       statusCode: 200,
       headers,
-      body: response,
+      body: JSON.stringify({ url }),
     };
   } catch (error) {
     return {
       statusCode: 500,
       body: JSON.stringify({ message: 'Server error' }),
     };
-  } finally {
-
   }
 }
