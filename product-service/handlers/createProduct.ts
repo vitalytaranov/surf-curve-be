@@ -47,6 +47,7 @@ export const createProduct: APIGatewayProxyHandler = async (event) => {
   const client = new Client(dbOptions);
   await client.connect();
 
+
   try {
     await client.query(PGTransaction.begin);
     const { title, description, price } = payload;
