@@ -1,4 +1,4 @@
-import { DbOptions } from './types';
+import { DbOptions } from '../types';
 
 const { PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD } = process.env
 export const dbOptions: DbOptions = {

@@ -4,7 +4,7 @@ import { Client } from 'pg';
 import * as Yup from 'yup';
 
 import { dbOptions } from '../db-options';
-import { PGTransaction } from '../utils';
+import { PGTransaction } from '../../utils';
 
 const deleteProductSchema = Yup.object().shape({
   productId: Yup.string().defined(),

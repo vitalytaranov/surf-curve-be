@@ -15,3 +15,7 @@ export type PGTransactionEnum = {
   commit: string,
   rollback: string,
 };
+
+export type ResponseOptions = {
+  body: {},
+};

@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { isUndefined } from 'lodash';
 
 import { dbOptions } from '../db-options';
-import { PGTransaction } from '../utils';
+import { PGTransaction } from '../../utils';
 
 
 const newProductSchema = Yup.object().shape({
