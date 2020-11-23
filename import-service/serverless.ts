@@ -23,6 +23,7 @@ const serverlessConfiguration: Serverless = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       SQS_URL: '${cf:product-service-${self:provider.stage}.SQSQueueUrl}',
+      SNS_TOPIC_ARN: '${cf:product-service-${self:provider.stage}.SNSTopicARN}',
     },
     iamRoleStatements: [
       {
@@ -39,6 +40,11 @@ const serverlessConfiguration: Serverless = {
         Effect: 'Allow',
         Action: 'sqs:*',
         Resource: '${cf:product-service-${self:provider.stage}.SQSQueueArn}',
+      },
+      {
+        Effect: 'Allow',
+        Action: 'sns:*',
+        Resource: '${cf:product-service-${self:provider.stage}.SNSTopicARN}',
       },
     ],
   },

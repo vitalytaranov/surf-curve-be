@@ -1,5 +1,12 @@
 import type { Serverless } from 'serverless/aws';
 
+
+const dotenv = require('dotenv').config({
+  path: './.env'
+});
+const { SNS_SUB_EMAIL } = dotenv.parsed;
+
+
 const serverlessConfiguration: Serverless = {
   service: {
     name: 'product-service',
@@ -26,15 +33,6 @@ const serverlessConfiguration: Serverless = {
       // PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD
     },
     iamRoleStatements: [
-      // {
-      //   "Effect": "Allow",
-      //   "Action": [
-      //     "lambda:InvokeFunction"
-      //   ],
-      //   "Resource": [
-      //     "*"
-      //   ]
-      // },
       {
         Effect: 'Allow',
         Action: 'sqs:*',
@@ -44,15 +42,15 @@ const serverlessConfiguration: Serverless = {
           },
         ],
       },
-      // {
-      //   Effect: 'Allow',
-      //   Action: 'sns:*',
-      //   Resource: [
-      //     {
-      //       Ref: 'SNSTopic',
-      //     },
-      //   ],
-      // },
+      {
+        Effect: 'Allow',
+        Action: 'sns:*',
+        Resource: [
+          {
+            Ref: 'SNSTopic',
+          },
+        ],
+      },
     ],
   },
   resources: {
@@ -67,6 +65,11 @@ const serverlessConfiguration: Serverless = {
           'Fn::GetAtt': ['SQSQueue', 'Arn'],
         },
       },
+      SNSTopicARN: {
+        Value: {
+          Ref: 'SNSTopic',
+        },
+      },
     },
     Resources: {
       SQSQueue: {
@@ -74,6 +77,25 @@ const serverlessConfiguration: Serverless = {
         Properties: {
           QueueName: 'catalogBatchProcessQueue',
         },
+      },
+      SNSTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'createProductTopic',
+        },
+      },
+      SNSSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: SNS_SUB_EMAIL,
+          Protocol: 'email',
+          TopicArn: {
+            Ref: 'SNSTopic',
+          },
+          FilterPolicy: {
+            status: ['OK'],
+          },
+        }
       },
     },
   },

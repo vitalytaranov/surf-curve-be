@@ -1,12 +1,12 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
-import { S3, SQS } from 'aws-sdk';
+import { S3, SQS, SNS } from 'aws-sdk';
 import * as csv from 'csv-parser';
 
 import { S3_REGION } from '../utils';
 
 
-const { BUCKET, SQS_URL } = process.env
+const { BUCKET, SQS_URL, SNS_TOPIC_ARN } = process.env
 
 function stringify(obj: {}): string {
   return JSON.stringify(obj);
@@ -27,6 +27,19 @@ function sendToQueue(QueueUrl: string, items: Array<any>): void {
       }
       console.log(`SQS message sent for ${ MessageBody }`);
     });
+  });
+
+  const sns = new SNS({ region: 'eu-west-1' });
+  console.log('SNS_TOPIC_ARN: ', SNS_TOPIC_ARN);
+  sns.publish({
+    Subject: 'New products added',
+    Message: stringify(items),
+    TopicArn: SNS_TOPIC_ARN,
+  }, (error, data) => {
+    if (error) {
+      console.log(`SNS error: ${ error }`);
+    }
+    console.log(`SNS notification sent ${ data }`);
   });
 }
 
