@@ -25,6 +25,57 @@ const serverlessConfiguration: Serverless = {
       // create ".env" file to pass env variables to connect to DB
       // PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD
     },
+    iamRoleStatements: [
+      // {
+      //   "Effect": "Allow",
+      //   "Action": [
+      //     "lambda:InvokeFunction"
+      //   ],
+      //   "Resource": [
+      //     "*"
+      //   ]
+      // },
+      {
+        Effect: 'Allow',
+        Action: 'sqs:*',
+        Resource: [
+          {
+            'Fn::GetAtt': ['SQSQueue', 'Arn'],
+          },
+        ],
+      },
+      // {
+      //   Effect: 'Allow',
+      //   Action: 'sns:*',
+      //   Resource: [
+      //     {
+      //       Ref: 'SNSTopic',
+      //     },
+      //   ],
+      // },
+    ],
+  },
+  resources: {
+    Outputs: {
+      SQSQueueUrl: {
+        Value: {
+          Ref: 'SQSQueue',
+        },
+      },
+      SQSQueueArn: {
+        Value: {
+          'Fn::GetAtt': ['SQSQueue', 'Arn'],
+        },
+      },
+    },
+    Resources: {
+      SQSQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'catalogBatchProcessQueue',
+        },
+      },
+    },
   },
   functions: {
     getProductsList: {
@@ -74,6 +125,19 @@ const serverlessConfiguration: Serverless = {
           }
         }
       ]
+    },
+    catalogBatchProcess: {
+      handler: 'handler.catalogBatchProcess',
+      events: [
+        {
+          sqs: {
+            batchSize: 2,
+            arn: {
+              'Fn::GetAtt': ['SQSQueue', 'Arn'],
+            },
+          },
+        },
+      ],
     },
   }
 }
