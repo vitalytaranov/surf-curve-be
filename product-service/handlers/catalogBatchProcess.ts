@@ -14,11 +14,6 @@ function sendNotification(message: string) {
     Subject: 'New product added',
     Message: message,
     TopicArn: SNS_TOPIC_ARN,
-  }, (error, data) => {
-    if (error) {
-      console.log(`SNS error: ${ error }`);
-    }
-    console.log(`SNS notification sent ${ JSON.stringify(data) }`);
   }).promise();
 }
 
