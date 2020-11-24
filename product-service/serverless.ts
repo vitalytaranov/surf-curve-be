@@ -29,6 +29,9 @@ const serverlessConfiguration: Serverless = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      SNS_TOPIC_ARN: {
+        Ref: 'SNSTopic',
+      },
       // create ".env" file to pass env variables to connect to DB
       // PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD
     },

@@ -41,11 +41,6 @@ const serverlessConfiguration: Serverless = {
         Action: 'sqs:*',
         Resource: '${cf:product-service-${self:provider.stage}.SQSQueueArn}',
       },
-      {
-        Effect: 'Allow',
-        Action: 'sns:*',
-        Resource: '${cf:product-service-${self:provider.stage}.SNSTopicARN}',
-      },
     ],
   },
   functions: {
