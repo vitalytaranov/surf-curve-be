@@ -31,7 +31,7 @@ export const addProductToDb = (payload: NewProduct) => {
 
     const isValidProduct: boolean = await newProductSchema.isValid(product);
     if (!isValidProduct) {
-      reject({ message: 'Invalid request' });
+      reject(`error when processing ${ product.title }`);
     }
 
     const client = new Client(dbOptions);
@@ -63,7 +63,7 @@ export const addProductToDb = (payload: NewProduct) => {
       });
     } catch (error) {
       await client.query(PGTransaction.rollback);
-      reject({ message: 'Server error' });
+      reject(`error when processing ${ product.title }`);
     } finally {
       await client.end();
     }

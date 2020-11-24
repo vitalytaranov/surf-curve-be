@@ -17,17 +17,19 @@ function sendNotification(message: string) {
   }).promise();
 }
 
-export const catalogBatchProcess: APIGatewayProxyHandler = async (event, context) => {
+export const catalogBatchProcess: APIGatewayProxyHandler = async (event) => {
   console.log('@catalogBatchProcess: ', event);
 
   try {
     await Promise.all(
       event.Records.map(async (product) => {
         try {
-          await addProductToDb(JSON.parse(product.body));
+          const parsedProduct = JSON.parse(product.body);
+          await addProductToDb(parsedProduct);
           await sendNotification(product.body);
+          console.log(`product has been processed`);
         } catch (error) {
-          console.log('ERROR: ', error);
+          console.log(error);
         }
       }));
   } catch (error) {
