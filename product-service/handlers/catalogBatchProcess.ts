@@ -6,22 +6,14 @@ import { addProductToDb } from '../db/product';
 
 const { SNS_TOPIC_ARN } = process.env;
 
-type Notification = 'SUCCESS' | 'FAILURE';
-
-function sendNotification(message: string, type: Notification) {
+function sendNotification(message: string) {
   console.log('@sendNotification');
 
   const sns = new SNS({ region: 'eu-west-1' });
   return sns.publish({
-    Subject: type === 'SUCCESS' ? 'Product was added' : 'Product was not added',
+    Subject: 'New product added',
     Message: message,
     TopicArn: SNS_TOPIC_ARN,
-    MessageAttributes: {
-      status: {
-        DataType: 'String',
-        StringValue: type,
-      },
-    },
   }).promise();
 }
 
@@ -34,11 +26,10 @@ export const catalogBatchProcess: APIGatewayProxyHandler = async (event) => {
         try {
           const parsedProduct = JSON.parse(product.body);
           await addProductToDb(parsedProduct);
-          await sendNotification(product.body, 'SUCCESS');
+          await sendNotification(product.body);
           console.log(`product has been processed`);
         } catch (error) {
           console.log(error);
-          await sendNotification(product.body, 'FAILURE');
         }
       }));
   } catch (error) {
