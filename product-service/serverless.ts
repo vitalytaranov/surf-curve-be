@@ -4,7 +4,7 @@ import type { Serverless } from 'serverless/aws';
 const dotenv = require('dotenv').config({
   path: './.env'
 });
-const { SNS_SUB_EMAIL } = dotenv.parsed;
+const { SNS_SUB_SUCCESS_EMAIL, SNS_SUB_FAILURE_EMAIL } = dotenv.parsed;
 
 
 const serverlessConfiguration: Serverless = {
@@ -84,18 +84,34 @@ const serverlessConfiguration: Serverless = {
       SNSTopic: {
         Type: 'AWS::SNS::Topic',
         Properties: {
-          TopicName: 'createProductTopic',
+          TopicName: 'create-product-topic2',
         },
       },
-      SNSSubscription: {
+      createProductSuccessSub: {
         Type: 'AWS::SNS::Subscription',
         Properties: {
-          Endpoint: SNS_SUB_EMAIL,
+          Endpoint: SNS_SUB_SUCCESS_EMAIL,
           Protocol: 'email',
           TopicArn: {
             Ref: 'SNSTopic',
           },
-        }
+          FilterPolicy: {
+            isError: ['false']
+          }
+        },
+      },
+      createProductFailureSub: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: SNS_SUB_FAILURE_EMAIL,
+          Protocol: 'email',
+          TopicArn: {
+            Ref: 'SNSTopic',
+          },
+          FilterPolicy: {
+            isError: ['true']
+          }
+        },
       },
     },
   },
