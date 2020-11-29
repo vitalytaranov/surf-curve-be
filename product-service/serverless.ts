@@ -1,5 +1,12 @@
 import type { Serverless } from 'serverless/aws';
 
+
+const dotenv = require('dotenv').config({
+  path: './.env'
+});
+const { SNS_SUB_SUCCESS_EMAIL, SNS_SUB_FAILURE_EMAIL } = dotenv.parsed;
+
+
 const serverlessConfiguration: Serverless = {
   service: {
     name: 'product-service',
@@ -22,8 +29,90 @@ const serverlessConfiguration: Serverless = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      SNS_TOPIC_ARN: {
+        Ref: 'SNSTopic',
+      },
       // create ".env" file to pass env variables to connect to DB
       // PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD
+    },
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: 'sqs:*',
+        Resource: [
+          {
+            'Fn::GetAtt': ['SQSQueue', 'Arn'],
+          },
+        ],
+      },
+      {
+        Effect: 'Allow',
+        Action: 'sns:*',
+        Resource: [
+          {
+            Ref: 'SNSTopic',
+          },
+        ],
+      },
+    ],
+  },
+  resources: {
+    Outputs: {
+      SQSQueueUrl: {
+        Value: {
+          Ref: 'SQSQueue',
+        },
+      },
+      SQSQueueArn: {
+        Value: {
+          'Fn::GetAtt': ['SQSQueue', 'Arn'],
+        },
+      },
+      SNSTopicARN: {
+        Value: {
+          Ref: 'SNSTopic',
+        },
+      },
+    },
+    Resources: {
+      SQSQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'catalogBatchProcessQueue',
+        },
+      },
+      SNSTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'create-product-topic2',
+        },
+      },
+      createProductSuccessSub: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: SNS_SUB_SUCCESS_EMAIL,
+          Protocol: 'email',
+          TopicArn: {
+            Ref: 'SNSTopic',
+          },
+          FilterPolicy: {
+            isError: ['false']
+          }
+        },
+      },
+      createProductFailureSub: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: SNS_SUB_FAILURE_EMAIL,
+          Protocol: 'email',
+          TopicArn: {
+            Ref: 'SNSTopic',
+          },
+          FilterPolicy: {
+            isError: ['true']
+          }
+        },
+      },
     },
   },
   functions: {
@@ -74,6 +163,19 @@ const serverlessConfiguration: Serverless = {
           }
         }
       ]
+    },
+    catalogBatchProcess: {
+      handler: 'handler.catalogBatchProcess',
+      events: [
+        {
+          sqs: {
+            batchSize: 5,
+            arn: {
+              'Fn::GetAtt': ['SQSQueue', 'Arn'],
+            },
+          },
+        },
+      ],
     },
   }
 }
