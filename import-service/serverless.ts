@@ -43,6 +43,23 @@ const serverlessConfiguration: Serverless = {
       },
     ],
   },
+  resources: {
+    Resources: {
+      GatewayResponseDefault400: {
+        Type: 'AWS::ApiGateway::GatewayResponse',
+        Properties: {
+          ResponseType: 'DEFAULT_4XX',
+          RestApiId: {
+            Ref: 'ApiGatewayRestApi',
+          },
+          ResponseParameters: {
+            'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+            'gatewayresponse.header.Access-Control-Allow-Headers': "'*'",
+          },
+        },
+      },
+    },
+  },
   functions: {
     importFile: {
       handler: 'handler.importFile',
@@ -52,6 +69,13 @@ const serverlessConfiguration: Serverless = {
             method: 'get',
             path: 'import',
             cors: true,
+            authorizer: {
+              name: 'tokenAuthorizer',
+              type: 'token',
+              identitySource: 'method.request.header.Authorization',
+              arn: 'arn:aws:lambda:eu-west-1:645840503281:function:authorization-service-dev-basicAuthorizer',
+              resultTtlInSeconds: 0,
+            },
             request: {
               parameters: {
                 querystrings: {
