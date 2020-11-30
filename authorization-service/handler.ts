@@ -29,7 +29,7 @@ function generatePolicy(principal: string, effect: Effect, arn: string) {
 export const basicAuthorizer: APIGatewayTokenAuthorizerHandler = async (
   event
 ) => {
-  console.log('INPUT: ', event);
+  console.log('@basicAuthorizer: ', event);
   if (event.type !== 'TOKEN') {
     throw new Error('Unauthorized');
   }
