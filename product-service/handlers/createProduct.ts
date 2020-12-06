@@ -14,6 +14,7 @@ const headers = {
 export const createProduct: APIGatewayProxyHandler = async (event) => {
   const product = await addProductToDb(JSON.parse(event.body));
 
+
   try {
     return {
       statusCode: 200,
