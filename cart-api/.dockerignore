@@ -1,0 +1,3 @@
+Dockerfile
+dist #build files
+node_modules #downloadable deps
