@@ -13,7 +13,7 @@ WORKDIR /app
 COPY --from=base /app/package*.json ./
 RUN npm install --production && npm cache clean --force
 
-COPY --from=build /app/dist/ ./dist
+COPY --from=build /app/dist/ ./dist/
 ENV PORT=3030
 EXPOSE 3030
 CMD ["npm", "run","start:prod"]
